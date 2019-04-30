@@ -59,7 +59,6 @@ class RemarkTransformer {
       slug: fields.slug,
       path: fields.path,
       date: fields.date,
-      test,
       content,
       excerpt,
       fields
