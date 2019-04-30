@@ -38,10 +38,9 @@ class RemarkTransformer {
     const plugins = (options.plugins || []).concat(localOptions.plugins || []);
 
     this.plugins = createPlugins(this.options, plugins);
-    this.toAST = unified()
-      .use(remarkParse)
-      .use(remarkAttr).parse;
+    this.toAST = unified().use(remarkParse).parse;
     this.applyPlugins = unified()
+      .use(remarkAttr)
       .data("transformer", this)
       .use(this.plugins).run;
     this.toHTML = unified().use(remarkHtml).stringify;
@@ -74,11 +73,9 @@ class RemarkTransformer {
         type: GraphQLString,
         resolve: node => this._nodeToHTML(node)
       },
-      test: {
-        type: GraphQLString,
-        resolve: () => {
-          return "one more time";
-        }
+      content_md: {
+        type: GraphQLList,
+        resolve: node
       },
       headings: {
         type: new GraphQLList(HeadingType),
