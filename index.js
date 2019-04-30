@@ -40,12 +40,9 @@ class RemarkTransformer {
     this.plugins = createPlugins(this.options, plugins);
     this.toAST = unified().use(remarkParse).parse;
     this.applyPlugins = unified()
-      .use(remarkAttr)
       .data("transformer", this)
       .use(this.plugins).run;
-    this.toHTML = unified()
-      .use(remarkHtml)
-      .use(remarkAttr).stringify;
+    this.toHTML = unified().use(remarkHtml).stringify;
   }
 
   parse(source) {
@@ -76,8 +73,8 @@ class RemarkTransformer {
         resolve: node => this._nodeToHTML(node)
       },
       content_md: {
-        type: GraphQLList,
-        resolve: node
+        type: GraphQLString,
+        resolve: node => this._nodeToMD(node)
       },
       headings: {
         type: new GraphQLList(HeadingType),
@@ -162,6 +159,26 @@ class RemarkTransformer {
       const ast = this.toAST(file);
 
       cached = this.applyPlugins(ast, file);
+      cache.set(key, cached);
+    }
+
+    return Promise.resolve(cached);
+  }
+
+  _nodeToMD(node) {
+    const key = cacheKey(node, "md");
+    let cached = cache.get(key);
+
+    console.log("NODE!!", node);
+
+    if (!cached) {
+      cached = (async () => {
+        const file = createFile(node);
+        const ast = await this._nodeToAST(node);
+
+        return this.toHTML(ast, file);
+      })();
+
       cache.set(key, cached);
     }
 
