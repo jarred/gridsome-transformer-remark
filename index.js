@@ -5,6 +5,7 @@ const remarkHtml = require("remark-html");
 const remarkParse = require("remark-parse");
 const sanitizeHTML = require("sanitize-html");
 const { words, defaultsDeep } = require("lodash");
+const remarkAttr = require("remark-attr");
 
 const cache = new LRU({ max: 1000 });
 
@@ -37,7 +38,9 @@ class RemarkTransformer {
     const plugins = (options.plugins || []).concat(localOptions.plugins || []);
 
     this.plugins = createPlugins(this.options, plugins);
-    this.toAST = unified().use(remarkParse).parse;
+    this.toAST = unified()
+      .use(remarkParse)
+      .use(remarkAttr).parse;
     this.applyPlugins = unified()
       .data("transformer", this)
       .use(this.plugins).run;
@@ -73,7 +76,9 @@ class RemarkTransformer {
       },
       test: {
         type: GraphQLString,
-        resolve: "123"
+        resolve: () => {
+          return "one more time";
+        }
       },
       headings: {
         type: new GraphQLList(HeadingType),

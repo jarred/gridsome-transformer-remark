@@ -19,6 +19,7 @@
     "html-to-text": "^4.0.0",
     "lodash": "^4.17.11",
     "lru-cache": "^5.1.1",
+    "remark-attr": "^0.8.3",
     "remark-autolink-headings": "^5.0.0",
     "remark-external-links": "^3.0.0",
     "remark-fix-guillemets": "^1.0.15",
