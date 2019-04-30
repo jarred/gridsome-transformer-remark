@@ -43,7 +43,9 @@ class RemarkTransformer {
       .use(remarkAttr)
       .data("transformer", this)
       .use(this.plugins).run;
-    this.toHTML = unified().use(remarkHtml).stringify;
+    this.toHTML = unified()
+      .use(remarkHtml)
+      .use(remarkAttr).stringify;
   }
 
   parse(source) {
