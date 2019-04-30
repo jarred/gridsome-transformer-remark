@@ -168,20 +168,12 @@ class RemarkTransformer {
   _nodeToMD(node) {
     const key = cacheKey(node, "md");
     let cached = cache.get(key);
-
-    console.log("NODE!!", node);
-
     if (!cached) {
       cached = (async () => {
-        const file = createFile(node);
-        const ast = await this._nodeToAST(node);
-
-        return this.toHTML(ast, file);
+        return node.content;
       })();
-
       cache.set(key, cached);
     }
-
     return Promise.resolve(cached);
   }
 
